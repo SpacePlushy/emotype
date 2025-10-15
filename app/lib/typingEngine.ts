@@ -67,7 +67,7 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 3,
     correctionPause: 300,
     speedVariation: 30,
-    typoFrequency: 0.7, // 70% chance of actual typo when backspacing
+    typoFrequency: 0.0, // TEMPORARILY DISABLED - was 0.7
     typoVisibilityTime: 200, // Show typo for 200ms
   },
 
@@ -84,7 +84,7 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 2,
     correctionPause: 150,
     speedVariation: 20,
-    typoFrequency: 0.5, // 50% chance of actual typo when backspacing
+    typoFrequency: 0.0, // TEMPORARILY DISABLED - was 0.5
     typoVisibilityTime: 150, // Show typo for 150ms
   },
 
@@ -101,7 +101,7 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 4,
     correctionPause: 400,
     speedVariation: 40,
-    typoFrequency: 0.4, // 40% chance of actual typo (more careful)
+    typoFrequency: 0.0, // TEMPORARILY DISABLED - was 0.4
     typoVisibilityTime: 250, // Show typo for 250ms
   },
 
@@ -118,7 +118,7 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 3,
     correctionPause: 200,
     speedVariation: 35,
-    typoFrequency: 0.8, // 80% chance of actual typo (excited = more mistakes)
+    typoFrequency: 0.0, // TEMPORARILY DISABLED - was 0.8
     typoVisibilityTime: 180, // Show typo for 180ms
   },
 
@@ -135,7 +135,7 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 4,
     correctionPause: 350,
     speedVariation: 40,
-    typoFrequency: 0.75, // 75% chance of actual typo
+    typoFrequency: 0.0, // TEMPORARILY DISABLED - was 0.75
     typoVisibilityTime: 220, // Show typo for 220ms
   },
 };
