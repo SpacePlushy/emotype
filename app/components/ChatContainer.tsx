@@ -81,6 +81,9 @@ export function ChatContainer() {
 
         // Streaming complete - FIRST clear streaming state, THEN update message status
         // This prevents the flash of full text before animation starts
+        console.log('[ChatContainer] Streaming complete. Full content length:', fullContent.length);
+        console.log('[ChatContainer] First 100 chars:', fullContent.substring(0, 100));
+
         setStreamingContent('');
         setStreamingMessageId(null);
 

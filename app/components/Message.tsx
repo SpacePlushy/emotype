@@ -46,6 +46,16 @@ export function Message({ message, streamingContent, isStreaming }: MessageProps
     setMessageStatus(message.id, 'complete');
   };
 
+  // DEBUG: Log what we're passing to TypingAnimator
+  if (showAnimation) {
+    console.log('[Message] Rendering TypingAnimator with:', {
+      messageId: message.id,
+      contentLength: content.length,
+      first100chars: content.substring(0, 100),
+      status: message.status,
+    });
+  }
+
   return (
     <div
       className={`flex w-full mb-4 ${
