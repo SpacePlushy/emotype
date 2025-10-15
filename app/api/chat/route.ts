@@ -80,9 +80,10 @@ The user will see your response appear character by character in real-time, so w
               controller.enqueue(encoder.encode(content));
             }
 
-            // Check if stream is finished
+            // Check if stream is finished AFTER processing content
+            // Don't terminate() here - let the stream close naturally
+            // This ensures we don't drop any final chunks
             if (OpenRouterClient.isStreamFinished(parsedChunk)) {
-              controller.terminate();
               break;
             }
           }
