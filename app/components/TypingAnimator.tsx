@@ -102,86 +102,10 @@ export function TypingAnimator({
       while (position < textLength && animationRef.current) {
         const char = fullText[position];
 
-        // TEMPORARILY DISABLE ALL BACKSPACE LOGIC FOR DEBUGGING
-        if (false && engine.shouldAddBackspace(position, textLength) && currentText.length > 0) {
-          // Decide if we should make an actual typo or just retype
-          if (engine.shouldMakeTypo()) {
-            // Generate a realistic typo sequence
-            const typoSequence = engine.generateTypoSequence(fullText, position);
-
-            if (typoSequence) {
-              // Calculate how many correct characters this typo represents
-              const correctCharCount = Math.min(
-                typoSequence.backspaceCount,
-                textLength - position
-              );
-
-              // Type the typo
-              for (let i = 0; i < typoSequence.typoText.length; i++) {
-                if (!animationRef.current) break;
-                currentText += typoSequence.typoText[i];
-                setDisplayedText(currentText);
-                onUpdate?.(currentText);
-                await delay(engine.getCharacterDelay(typoSequence.typoText[i]));
-              }
-
-              // Show the typo briefly
-              await delay(engine.getTypoVisibilityTime());
-
-              // Backspace the typo
-              for (let i = 0; i < typoSequence.backspaceCount; i++) {
-                if (!animationRef.current) break;
-                currentText = currentText.slice(0, -1);
-                setDisplayedText(currentText);
-                onUpdate?.(currentText);
-                await delay(50); // Backspace speed
-              }
-
-              // Pause after correction
-              await delay(engine.getCorrectionPause());
-
-              // Now type the correct characters
-              for (let i = 0; i < correctCharCount; i++) {
-                if (!animationRef.current) break;
-                const correctChar = fullText[position + i];
-                currentText += correctChar;
-                setDisplayedText(currentText);
-                onUpdate?.(currentText);
-                await delay(engine.getCharacterDelay(correctChar));
-              }
-
-              // Advance position past the characters we just typed correctly
-              position += correctCharCount;
-
-              // Continue to next iteration
-              continue;
-            }
-          }
-
-          // Fallback: traditional backspace (retype same text)
-          const backspaceLength = Math.min(
-            engine.getBackspaceLength(),
-            currentText.length
-          );
-
-          // Perform backspace animation
-          for (let i = 0; i < backspaceLength; i++) {
-            if (!animationRef.current) break;
-            currentText = currentText.slice(0, -1);
-            setDisplayedText(currentText);
-            onUpdate?.(currentText);
-            await delay(50); // Backspace speed
-          }
-
-          // Pause after correction
-          await delay(engine.getCorrectionPause());
-
-          // Move position back so we retype the deleted characters
-          position = Math.max(0, position - backspaceLength);
-
-          // Skip adding the character this iteration - we'll retype from the new position
-          continue;
-        }
+        // TEMPORARILY DISABLED ALL BACKSPACE LOGIC FOR DEBUGGING
+        // if (engine.shouldAddBackspace(position, textLength) && currentText.length > 0) {
+        //   ... entire backspace/typo code block commented out ...
+        // }
 
         // Add the character
         currentText += char;
