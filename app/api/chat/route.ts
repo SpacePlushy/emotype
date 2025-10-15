@@ -65,30 +65,24 @@ The user will see your response appear character by character in real-time, so w
     const processedStream = new ReadableStream({
       async start(controller) {
         try {
-          let totalContent = ''; // DEBUG: Track total content
-
           // Parse the entire SSE stream
           for await (const parsedChunk of OpenRouterClient.parseSSEStream(stream)) {
             const content = OpenRouterClient.getContentFromChunk(parsedChunk);
 
             if (content) {
-              totalContent += content; // DEBUG: Accumulate
-              console.log('[API] Content chunk:', content, '| Total so far:', totalContent.length);
               // Send content as plain text chunks
               controller.enqueue(encoder.encode(content));
             }
 
             // Check if stream is finished
             if (OpenRouterClient.isStreamFinished(parsedChunk)) {
-              console.log('[API] Stream finished. Total content:', totalContent.length, 'chars');
-              console.log('[API] Full content:', totalContent);
               break;
             }
           }
 
           controller.close();
         } catch (error) {
-          console.error('[API] Error processing stream:', error);
+          console.error('Error processing stream:', error);
           controller.error(error);
         }
       },

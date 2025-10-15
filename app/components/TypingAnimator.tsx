@@ -102,10 +102,35 @@ export function TypingAnimator({
       while (position < textLength && animationRef.current) {
         const char = fullText[position];
 
-        // TEMPORARILY DISABLED ALL BACKSPACE LOGIC FOR DEBUGGING
-        // if (engine.shouldAddBackspace(position, textLength) && currentText.length > 0) {
-        //   ... entire backspace/typo code block commented out ...
-        // }
+        // Check for backspace/typo simulation
+        if (
+          engine.shouldAddBackspace(position, textLength) &&
+          currentText.length > 0
+        ) {
+          // Traditional backspace (retype same text)
+          const backspaceLength = Math.min(
+            engine.getBackspaceLength(),
+            currentText.length
+          );
+
+          // Perform backspace animation
+          for (let i = 0; i < backspaceLength; i++) {
+            if (!animationRef.current) break;
+            currentText = currentText.slice(0, -1);
+            setDisplayedText(currentText);
+            onUpdate?.(currentText);
+            await delay(50); // Backspace speed
+          }
+
+          // Pause after correction
+          await delay(engine.getCorrectionPause());
+
+          // Move position back so we retype the deleted characters
+          position = Math.max(0, position - backspaceLength);
+
+          // Skip adding the character this iteration - we'll retype from the new position
+          continue;
+        }
 
         // Add the character
         currentText += char;
