@@ -67,8 +67,8 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 3,
     correctionPause: 300,
     speedVariation: 30,
-    typoFrequency: 0.5, // 50% of backspaces will be realistic typos
-    typoVisibilityTime: 200
+    typoFrequency: 0.7, // TEMPORARILY DISABLED - was 0.7
+    typoVisibilityTime: 200, // Show typo for 200ms
   },
 
   fast: {
@@ -84,8 +84,8 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 2,
     correctionPause: 150,
     speedVariation: 20,
-    typoFrequency: 0.3, // 30% - faster typers make fewer typos
-    typoVisibilityTime: 150
+    typoFrequency: 0.5, // TEMPORARILY DISABLED - was 0.5
+    typoVisibilityTime: 150, // Show typo for 150ms
   },
 
   thoughtful: {
@@ -101,8 +101,8 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 4,
     correctionPause: 400,
     speedVariation: 40,
-    typoFrequency: 0.2, // 20% - very careful, rarely makes typos
-    typoVisibilityTime: 250
+    typoFrequency: 0.4, // TEMPORARILY DISABLED - was 0.4
+    typoVisibilityTime: 250, // Show typo for 250ms
   },
 
   excited: {
@@ -118,8 +118,8 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 3,
     correctionPause: 200,
     speedVariation: 35,
-    typoFrequency: 0.7, // 70% - excited = more mistakes!
-    typoVisibilityTime: 180
+    typoFrequency: 0.8, // TEMPORARILY DISABLED - was 0.8
+    typoVisibilityTime: 180, // Show typo for 180ms
   },
 
   casual: {
@@ -135,8 +135,8 @@ export const TYPING_PERSONALITIES: Record<TypingPersonalityType, TypingPersonali
     backspaceLength: 4,
     correctionPause: 350,
     speedVariation: 40,
-    typoFrequency: 0.6, // 60% - casual typing has more mistakes
-    typoVisibilityTime: 220
+    typoFrequency: 0.75, // TEMPORARILY DISABLED - was 0.75
+    typoVisibilityTime: 220, // Show typo for 220ms
   },
 };
 
