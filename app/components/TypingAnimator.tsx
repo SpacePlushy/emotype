@@ -102,11 +102,8 @@ export function TypingAnimator({
       while (position < textLength && animationRef.current) {
         const char = fullText[position];
 
-        // Check for backspace/typo simulation
-        if (
-          engine.shouldAddBackspace(position, textLength) &&
-          currentText.length > 0
-        ) {
+        // TEMPORARILY DISABLE ALL BACKSPACE LOGIC FOR DEBUGGING
+        if (false && engine.shouldAddBackspace(position, textLength) && currentText.length > 0) {
           // Decide if we should make an actual typo or just retype
           if (engine.shouldMakeTypo()) {
             // Generate a realistic typo sequence
