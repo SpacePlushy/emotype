@@ -107,7 +107,60 @@ export function TypingAnimator({
           engine.shouldAddBackspace(position, textLength) &&
           currentText.length > 0
         ) {
-          // Traditional backspace (retype same text)
+          // Decide whether to make a realistic typo or traditional backspace
+          if (engine.shouldMakeTypo()) {
+            // REALISTIC TYPO MODE
+            const typoSequence = engine.generateTypoSequence(fullText, position);
+
+            if (typoSequence) {
+              // Step 1: Type the WRONG characters (the typo)
+              for (let i = 0; i < typoSequence.typoText.length; i++) {
+                if (!animationRef.current) break;
+                currentText += typoSequence.typoText[i];
+                setDisplayedText(currentText);
+                onUpdate?.(currentText);
+                await delay(engine.getCharacterDelay(typoSequence.typoText[i]));
+              }
+
+              // Step 2: Show the typo briefly so user sees it
+              await delay(engine.getTypoVisibilityTime());
+
+              // Step 3: Backspace the typo
+              for (let i = 0; i < typoSequence.backspaceCount; i++) {
+                if (!animationRef.current) break;
+                currentText = currentText.slice(0, -1);
+                setDisplayedText(currentText);
+                onUpdate?.(currentText);
+                await delay(50); // Backspace speed
+              }
+
+              // Step 4: Pause after correction (thinking moment)
+              await delay(engine.getCorrectionPause());
+
+              // Step 5: Type the CORRECT characters
+              const correctCharCount = Math.min(
+                typoSequence.backspaceCount,
+                textLength - position
+              );
+
+              for (let i = 0; i < correctCharCount; i++) {
+                if (!animationRef.current) break;
+                const correctChar = fullText[position + i];
+                currentText += correctChar;
+                setDisplayedText(currentText);
+                onUpdate?.(currentText);
+                await delay(engine.getCharacterDelay(correctChar));
+              }
+
+              // Step 6: Advance position past the characters we just typed correctly
+              position += correctCharCount;
+
+              // Continue to next character
+              continue;
+            }
+          }
+
+          // TRADITIONAL BACKSPACE MODE (fallback or when typo disabled)
           const backspaceLength = Math.min(
             engine.getBackspaceLength(),
             currentText.length
