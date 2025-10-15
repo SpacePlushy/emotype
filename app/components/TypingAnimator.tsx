@@ -113,6 +113,12 @@ export function TypingAnimator({
             const typoSequence = engine.generateTypoSequence(fullText, position);
 
             if (typoSequence) {
+              // Calculate how many correct characters this typo represents
+              const correctCharCount = Math.min(
+                typoSequence.backspaceCount,
+                textLength - position
+              );
+
               // Type the typo
               for (let i = 0; i < typoSequence.typoText.length; i++) {
                 if (!animationRef.current) break;
@@ -137,7 +143,20 @@ export function TypingAnimator({
               // Pause after correction
               await delay(engine.getCorrectionPause());
 
-              // Continue typing the correct text from current position
+              // Now type the correct characters
+              for (let i = 0; i < correctCharCount; i++) {
+                if (!animationRef.current) break;
+                const correctChar = fullText[position + i];
+                currentText += correctChar;
+                setDisplayedText(currentText);
+                onUpdate?.(currentText);
+                await delay(engine.getCharacterDelay(correctChar));
+              }
+
+              // Advance position past the characters we just typed correctly
+              position += correctCharCount;
+
+              // Continue to next iteration
               continue;
             }
           }
