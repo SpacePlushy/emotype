@@ -59,43 +59,40 @@ The user will see your response appear character by character in real-time, so w
       max_tokens: 2000,
     });
 
-    // Create a TransformStream to process the OpenRouter stream
+    // Process the OpenRouter stream directly - don't use TransformStream
+    // Create a new ReadableStream that parses SSE and outputs plain text
     const encoder = new TextEncoder();
-    const transformStream = new TransformStream({
-      async transform(chunk, controller) {
+    const processedStream = new ReadableStream({
+      async start(controller) {
         try {
-          const chunkStream = new ReadableStream({
-            start(controller) {
-              controller.enqueue(chunk);
-              controller.close();
-            },
-          });
+          let totalContent = ''; // DEBUG: Track total content
 
-          // Parse the SSE stream chunk
-          for await (const parsedChunk of OpenRouterClient.parseSSEStream(chunkStream)) {
+          // Parse the entire SSE stream
+          for await (const parsedChunk of OpenRouterClient.parseSSEStream(stream)) {
             const content = OpenRouterClient.getContentFromChunk(parsedChunk);
 
             if (content) {
+              totalContent += content; // DEBUG: Accumulate
+              console.log('[API] Content chunk:', content, '| Total so far:', totalContent.length);
               // Send content as plain text chunks
               controller.enqueue(encoder.encode(content));
             }
 
-            // Check if stream is finished AFTER processing content
-            // Don't terminate() here - let the stream close naturally
-            // This ensures we don't drop any final chunks
+            // Check if stream is finished
             if (OpenRouterClient.isStreamFinished(parsedChunk)) {
+              console.log('[API] Stream finished. Total content:', totalContent.length, 'chars');
+              console.log('[API] Full content:', totalContent);
               break;
             }
           }
+
+          controller.close();
         } catch (error) {
-          console.error('Error processing chunk:', error);
+          console.error('[API] Error processing stream:', error);
           controller.error(error);
         }
       },
     });
-
-    // Pipe the OpenRouter stream through our transform
-    const processedStream = stream.pipeThrough(transformStream);
 
     // Return the streaming response
     return new NextResponse(processedStream, {
