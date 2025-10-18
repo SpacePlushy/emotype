@@ -38,10 +38,10 @@ export interface TypingPersonality {
 
 // AI Model types
 export type AIModel =
-  | 'anthropic/claude-3.5-sonnet'
-  | 'anthropic/claude-3-opus'
-  | 'openai/gpt-4'
-  | 'openai/gpt-3.5-turbo';
+  | 'anthropic/claude-sonnet-4.5'
+  | 'anthropic/claude-haiku-4.5'
+  | 'openai/gpt-5'
+  | 'google/gemini-2.5-flash';
 
 export interface ModelOption {
   id: AIModel;
