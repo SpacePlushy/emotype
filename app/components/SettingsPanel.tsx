@@ -8,24 +8,24 @@ import { AIModel, ModelOption } from '@/app/types/chat';
 
 const AVAILABLE_MODELS: ModelOption[] = [
   {
-    id: 'anthropic/claude-3.5-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    description: 'Recommended - Fast and intelligent',
+    id: 'anthropic/claude-sonnet-4.5',
+    name: 'Claude Sonnet 4.5',
+    description: 'Recommended - Most advanced Sonnet model',
   },
   {
-    id: 'anthropic/claude-3-opus',
-    name: 'Claude 3 Opus',
-    description: 'Most capable Claude model',
+    id: 'anthropic/claude-haiku-4.5',
+    name: 'Claude Haiku 4.5',
+    description: 'Fast and efficient for everyday tasks',
   },
   {
-    id: 'openai/gpt-4',
-    name: 'GPT-4',
-    description: 'OpenAI\'s most capable model',
+    id: 'openai/gpt-5',
+    name: 'GPT-5',
+    description: 'OpenAI\'s latest reasoning model',
   },
   {
-    id: 'openai/gpt-3.5-turbo',
-    name: 'GPT-3.5 Turbo',
-    description: 'Fast and cost-effective',
+    id: 'google/gemini-2.5-flash',
+    name: 'Gemini 2.5 Flash',
+    description: 'Google\'s advanced reasoning model',
   },
 ];
 
@@ -52,18 +52,20 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
   const personalities = getAvailablePersonalities();
 
-  if (!isOpen) return null;
-
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+        className={`fixed inset-0 bg-black/50 dark:bg-black/80 z-40 transition-opacity duration-200 motion-reduce:transition-none ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         onClick={onClose}
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto">
+      <div className={`fixed right-0 top-0 bottom-0 w-full max-w-md bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto border-l border-gray-300 dark:border-gray-800 transition-transform duration-300 ease-in-out motion-reduce:transition-none ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -211,18 +213,18 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   onClose();
                 }
               }}
-              className="w-full px-4 py-3 bg-red-500 dark:bg-red-600 text-white rounded-lg hover:bg-red-600 dark:hover:bg-red-700 transition-colors"
+              className="w-full px-4 py-3 bg-red-500 dark:bg-red-600 text-white rounded-lg hover:bg-red-600 dark:hover:bg-red-700 active:bg-red-700 dark:active:bg-red-800 transition-all duration-200 font-medium shadow-md dark:shadow-lg"
             >
               Clear Conversation
             </button>
           </div>
 
           {/* Info */}
-          <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-            <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+          <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+            <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
               About This App
             </h4>
-            <p className="text-sm text-blue-800 dark:text-blue-200">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
               AI Typing Simulator creates realistic typing animations for AI
               responses. Configure your preferences above to customize the
               experience.
