@@ -50,7 +50,7 @@ export function InputBar({
   };
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-4">
+    <div className="border-t border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-4">
       <div className="flex items-end gap-2 max-w-4xl mx-auto">
         <textarea
           ref={textareaRef}
@@ -60,13 +60,13 @@ export function InputBar({
           placeholder={placeholder}
           disabled={disabled}
           rows={1}
-          className="flex-1 resize-none rounded-2xl border border-gray-300 dark:border-gray-600 px-4 py-3 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed text-base"
+          className="flex-1 resize-none rounded-2xl border-2 border-gray-300 dark:border-gray-700 px-4 py-3 text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed text-base transition-all duration-200"
           style={{ maxHeight: '150px' }}
         />
         <button
           onClick={handleSend}
           disabled={disabled || !input.trim()}
-          className="bg-blue-500 dark:bg-blue-600 text-white px-6 py-3 rounded-2xl font-medium hover:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors duration-200 flex-shrink-0"
+          className="bg-blue-500 dark:bg-purple-600 text-white px-6 py-3 rounded-2xl font-medium hover:bg-blue-600 dark:hover:bg-purple-700 active:bg-blue-700 dark:active:bg-purple-800 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-500 disabled:cursor-not-allowed transition-all duration-200 flex-shrink-0 shadow-md"
         >
           Send
         </button>

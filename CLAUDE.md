@@ -40,10 +40,11 @@ Get an OpenRouter API key at https://openrouter.ai
 
 The typing animation is the heart of this application. Understanding how it works:
 
-1. **Streaming Pipeline**: User message → Next.js API route → OpenRouter API → Streaming response back to client
-2. **Animation Engine** ([typingEngine.ts](app/lib/typingEngine.ts)): Calculates character delays, pauses, and typing behaviors based on personality profiles
-3. **TypingAnimator Component** ([TypingAnimator.tsx](app/components/TypingAnimator.tsx)): Consumes streaming API responses and displays them character-by-character with realistic timing
-4. **Typo System**: Generates realistic typos using keyboard proximity maps, then backspaces and corrects them
+1. **Streaming Pipeline**: User message → Next.js API route → OpenRouter API (SSE stream) → Parsed to plain text chunks → Client receives stream
+2. **OpenRouter Client** ([openrouter.ts](app/lib/openrouter.ts)): Handles API authentication and SSE stream parsing
+3. **Animation Engine** ([typingEngine.ts](app/lib/typingEngine.ts)): Calculates character delays, pauses, and typing behaviors based on personality profiles
+4. **TypingAnimator Component** ([TypingAnimator.tsx](app/components/TypingAnimator.tsx)): Consumes streaming API responses and displays them character-by-character with realistic timing
+5. **Typo System**: Generates realistic typos using keyboard proximity maps, then backspaces and corrects them
 
 ### State Management Flow
 
@@ -71,19 +72,19 @@ Understanding message states is critical for working with the animation system:
 ### Typing Personality System
 
 Five pre-configured personalities in [typingEngine.ts](app/lib/typingEngine.ts):
-- **Natural**: Balanced, 80ms base speed, 8% backspace frequency, 70% typo rate
-- **Fast**: Quick, 50ms base speed, 3% backspace frequency, 50% typo rate
-- **Thoughtful**: Deliberate, 120ms base speed, 5% backspace frequency, 40% typo rate
-- **Excited**: Energetic, 60ms base speed, 10% backspace frequency, 80% typo rate
-- **Casual**: Relaxed, 90ms base speed, 12% backspace frequency, 75% typo rate
+- **Natural**: Balanced, 80ms base speed, 8% backspace frequency, 70% typo rate (active)
+- **Fast**: Quick, 50ms base speed, 3% backspace frequency, 50% typo rate (active)
+- **Thoughtful**: Deliberate, 120ms base speed, 5% backspace frequency, 40% typo rate (active)
+- **Excited**: Energetic, 60ms base speed, 10% backspace frequency, 80% typo rate (active)
+- **Casual**: Relaxed, 90ms base speed, 12% backspace frequency, 75% typo rate (active)
 
 Each personality controls:
 - `baseSpeed`: Milliseconds per character
 - `punctuationPause`: Delay after punctuation marks
 - `thinkingPauseMin/Max/Frequency`: Random pauses mid-response
 - `backspaceFrequency`: How often corrections occur
-- `typoFrequency`: Probability of actual typo vs simple retype
-- `typoVisibilityTime`: How long typos display before correction
+- `typoFrequency`: Probability of actual typo vs simple retype (when backspacing)
+- `typoVisibilityTime`: How long typos display before correction (100-250ms)
 
 ### Typo Generation System
 
@@ -100,12 +101,28 @@ See `generateTypo()` and `generateTypoSequence()` methods in [typingEngine.ts:30
 
 ## API Integration
 
+### OpenRouter Client
+
+The [openrouter.ts](app/lib/openrouter.ts) module provides an abstraction layer for OpenRouter API:
+
+- **OpenRouterClient class**: Handles authenticated requests to OpenRouter API
+  - `createChatCompletionStream()`: Creates streaming chat completion requests
+  - Returns raw SSE (Server-Sent Events) stream from OpenRouter
+- **Static helper methods**:
+  - `parseSSEStream()`: Async generator that parses SSE format into JSON chunks
+  - `getContentFromChunk()`: Extracts text content from stream chunks
+  - `isStreamFinished()`: Checks if stream has completed
+- **Factory function**: `createOpenRouterClient()` initializes client with API key from environment
+
 ### OpenRouter Streaming
 
 The [/api/chat/route.ts](app/api/chat/route.ts) endpoint:
 - Receives user message and model selection
-- Makes streaming request to OpenRouter API
-- Forwards stream chunks to client in real-time
+- Creates OpenRouterClient instance with API key from environment
+- Makes streaming request to OpenRouter API via client
+- Parses SSE stream into text chunks using `OpenRouterClient.parseSSEStream()`
+- Forwards plain text chunks to client in real-time
+- Returns `text/plain` stream instead of SSE format
 - Handles errors and API key validation
 
 **Important**: API key is never exposed to client—all OpenRouter calls go through Next.js API routes.
@@ -113,10 +130,10 @@ The [/api/chat/route.ts](app/api/chat/route.ts) endpoint:
 ### Supported Models
 
 Via OpenRouter:
-- `anthropic/claude-3.5-sonnet` (recommended)
-- `anthropic/claude-3-opus`
-- `openai/gpt-4`
-- `openai/gpt-3.5-turbo`
+- `anthropic/claude-sonnet-4.5` (recommended - most advanced Sonnet model)
+- `anthropic/claude-haiku-4.5` (fast and efficient)
+- `openai/gpt-5` (latest OpenAI reasoning model)
+- `google/gemini-2.5-flash` (Google's advanced reasoning model)
 
 ## Component Architecture
 
@@ -166,11 +183,13 @@ All types defined in [chat.ts](app/types/chat.ts):
 
 ### Modifying Typing Behavior
 
-The animation algorithm is in [TypingAnimator.tsx:105-168](app/components/TypingAnimator.tsx#L105-L168):
-- Handles both typo injection and traditional backspace/retype
-- Uses `engine.shouldMakeTypo()` to decide between typo modes
-- Typo mode: Generates wrong text → Shows briefly → Backspaces → Continues correct
-- Traditional mode: Backspaces existing text → Retypes same text correctly
+The animation algorithm is in [TypingAnimator.tsx:95-227](app/components/TypingAnimator.tsx#L95-L227):
+- Main animation loop in `animateTyping()` processes characters sequentially
+- Handles both realistic typo injection and traditional backspace/retype
+- Uses `engine.shouldMakeTypo()` to decide between typo modes:
+  - **Typo mode**: Generates wrong text → Shows briefly → Backspaces → Types correct text → Advances position
+  - **Traditional mode**: Backspaces existing text → Retypes same text correctly → Adjusts position backward
+- Character delays, punctuation pauses, and thinking pauses add natural rhythm
 
 ### Debugging Animation Issues
 

@@ -8,25 +8,25 @@ export default function Home() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-950">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4 shadow-sm">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-4 shadow-sm">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               AI Typing Simulator
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Chat with AI that types like a human
             </p>
           </div>
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-all duration-200 active:scale-95"
             aria-label="Settings"
           >
             <svg
-              className="w-6 h-6 text-gray-600 dark:text-gray-300"
+              className="w-6 h-6 text-gray-700 dark:text-gray-200"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -49,7 +49,7 @@ export default function Home() {
       </header>
 
       {/* Main Chat Area */}
-      <main className="flex-1 overflow-hidden max-w-4xl w-full mx-auto bg-white dark:bg-gray-800 shadow-lg">
+      <main className="flex-1 overflow-hidden max-w-4xl w-full mx-auto bg-white dark:bg-gray-900 shadow-lg">
         <ChatContainer />
       </main>
 

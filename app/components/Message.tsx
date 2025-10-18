@@ -53,10 +53,10 @@ export function Message({ message, streamingContent, isStreaming }: MessageProps
       }`}
     >
       <div
-        className={`max-w-[80%] md:max-w-[70%] px-4 py-3 rounded-2xl shadow-sm ${
+        className={`max-w-[80%] md:max-w-[70%] px-4 py-3 rounded-2xl ${
           isUser
-            ? 'bg-blue-500 dark:bg-blue-600 text-white rounded-tr-sm'
-            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-tl-sm'
+            ? 'bg-blue-500 dark:bg-purple-600 text-white rounded-tr-sm shadow-md'
+            : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white rounded-tl-sm shadow-sm border border-gray-300 dark:border-gray-700'
         }`}
       >
         <div className="text-base leading-relaxed whitespace-pre-wrap break-words">

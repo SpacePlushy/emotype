@@ -28,11 +28,11 @@ export function MessageList({
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="text-center text-gray-500 dark:text-gray-400">
-          <p className="text-lg font-medium mb-2">
+        <div className="text-center">
+          <p className="text-lg font-medium mb-2 text-gray-700 dark:text-gray-300">
             Chat with AI that types like a human
           </p>
-          <p className="text-sm">
+          <p className="text-sm text-gray-500 dark:text-gray-500">
             Send a message to start the conversation
           </p>
         </div>

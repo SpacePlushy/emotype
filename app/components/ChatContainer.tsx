@@ -107,7 +107,7 @@ export function ChatContainer() {
   );
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-800">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-900">
       <MessageList
         messages={messages}
         streamingContent={streamingContent}
